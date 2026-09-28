@@ -1,1 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Life Passengers Transport LLC - Premium Travel Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Custom color variables */
+        :root {
+            --primary-navy: #0f1f3f;
+            --secondary-navy: #1a2f52;
+            --accent-gold: #d4af37;
+            --accent-teal: #0d7f7f;
+            --text-light: #f8fafc;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, #0f1f3f 0%, #1a2f52 100%);
+        }
+        
+        .gradient-accent {
+            background: linear-gradient(135deg, #0d7f7f 0%, #0f1f3f 100%);
+        }
+        
+        .text-gold {
+            color: #d4af37;
+        }
+        
+        .border-gold {
+            border-color: #d4af37;
+        }
+        
+        /* Smooth transitions */
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        
+        /* Step indicator */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1e293b;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background: #0d7f7f;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-number {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            color: #64748b;
+            text-align: center;
+        }
+        
+        .step.active .step-label {
+            color: #0d7f7f;
+            font-weight: 600;
+        }
+        
+        /* Connecting line */
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: -1;
+        }
+        
+        .step:last-child::after {
+            display: none;
+        }
+        
+        .step.completed::after {
+            background: #22c55e;
+        }
+        
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 31, 63, 0.7);
+            z-index: 40;
+            overflow-y: auto;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Testimonial carousel */
+        .testimonial-carousel {
+            position: relative;
+        }
+        
+        .testimonial-item {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .testimonial-item.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Vehicle selection cards */
+        .vehicle-card {
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vehicle-card:hover {
+            border-color: #0d7f7f;
+            box-shadow: 0 10px 30px rgba(13, 127, 127, 0.15);
+        }
+        
+        .vehicle-card.selected {
+            border-color: #0d7f7f;
+            background: linear-gradient(135deg, rgba(13, 127, 127, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
+        }
+        
+        .vehicle-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #0d7f7f 0%, #0f5f5f 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(13, 127, 127, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #0f1f3f;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            border: 2px solid #0f1f3f;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+        
+        /* Input styles */
+        input, select, textarea {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            width: 100%;
+            font-size: 1rem;
+            color: #000000;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #0d7f7f;
+            box-shadow: 0 0 0 3px rgba(13, 127, 127, 0.1);
+        }
+        
+        input.error, select.error {
+            border-color: #ef4444;
+        }
+        
+        input.error:focus, select.error:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Service cards */
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(15, 31, 63, 0.1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            color: #0d7f7f;
+            margin-bottom: 1rem;
+        }
+        
+        /* Timetable */
+        .timetable-container {
+            overflow-x: auto;
+        }
+        
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .timetable thead {
+            background: linear-gradient(135deg, #0f1f3f 0%, #1a2f52 100%);
+            color: white;
+        }
+        
+        .timetable th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .timetable td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .timetable tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 30;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu a {
+            padding: 0.75rem;
+            color: #0f1f3f;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu a:hover {
+            color: #0d7f7f;
+            padding-left: 1rem;
+        }
+        
+        /* Hamburger menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #0f1f3f;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        
+        /* Loading animation */
+        .spinner {
+            border: 3px solid rgba(13, 127, 127, 0.1);
+            border-top: 3px solid #0d7f7f;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Success message */
+        .success-message {
+            background: #d1fae5;
+            border-left: 4px solid #22c55e;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Price display */
+        .price-display {
+            background: linear-gradient(135deg, #0d7f7f 0%, #0f5f5f 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
 
+    <!-- ============================================
+         HEADER & NAVIGATION
+         ============================================ -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
+                        <i class="fas fa-car-side text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold" style="color: #0f1f3f;">Future Life</h1>
+                        <p class="text-xs" style="color: #0d7f7f;">Transport LLC</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="nav-links flex gap-8">
+                    <a href="#home" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">Home</a>
+                    <a href="#services" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">Services</a>
+                    <a href="#booking" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">Booking</a>
+                    <a href="#timetable" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">Timetable</a>
+                    <a href="#about" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-teal-700 transition-colors font-medium">Contact</a>
+                </nav>
+
+                <!-- CTA Button (Desktop) -->
+                <button onclick="openBookingModal()" class="btn-primary hidden md:inline-block">
+                    <i class="fas fa-ticket mr-2"></i> Book Now
+                </button>
+
+                <!-- Mobile Hamburger Menu -->
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#booking">Booking</a>
+                <a href="#timetable">Timetable</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <button onclick="openBookingModal()" class="btn-primary w-full text-left mt-2">
+                    <i class="fas fa-ticket mr-2"></i> Book Now
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+         HERO SECTION WITH QUICK BOOKING
+         ============================================ -->
+    <section id="home" class="gradient-primary text-white py-16 sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Hero Content -->
+                <div>
+                    <h1 class="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
+                        Travel with <span class="text-gold">Confidence & Comfort</span>
+                    </h1>
+                    <p class="text-lg text-gray-200 mb-8 leading-relaxed">
+                        Experience reliable passenger transport across the UAE. Comfortable cars, dependable schedules, and friendly service for every journey.
+                    </p>
+                    <div class="flex gap-4">
+                        <button onclick="openBookingModal()" class="bg-gold text-navy font-bold px-8 py-3 rounded-lg hover:shadow-lg transition-all transform hover:scale-105">
+                            <i class="fas fa-search mr-2"></i> Book a Ride
+                        </button>
+                        <a href="tel:+971555721619" class="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-navy transition-all font-bold inline-block">
+                            <i class="fas fa-phone mr-2"></i> +971 55 572 1619
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Booking Widget -->
+                <div class="bg-white rounded-lg shadow-2xl p-6 sm:p-8">
+                    <h3 class="text-2xl font-bold text-navy mb-6">Quick Search</h3>
+                    
+                    <form id="quickBookingForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">From</label>
+                            <input type="text" placeholder="Pickup Location" class="w-full" value="Abu Dhabi">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">To</label>
+                            <input type="text" placeholder="Dropoff Location" class="w-full" value="Dubai">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                <input type="date" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                                <input type="time" class="w-full">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Passengers</label>
+                            <select class="w-full">
+                                <option>1 Passenger</option>
+                                <option>2 Passengers</option>
+                                <option>3 Passengers</option>
+                                <option>4+ Passengers</option>
+                            </select>
+                        </div>
+
+                        <button type="button" onclick="openBookingModal()" class="w-full btn-primary py-3 text-lg">
+                            <i class="fas fa-search mr-2"></i> Search Availability
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         BOOKING MODAL / MULTI-STEP FORM
+         ============================================ -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-content">
+            <!-- Close Button -->
+            <div class="flex justify-between items-center p-6 border-b">
+                <h2 class="text-2xl font-bold text-navy">Book Your Journey</h2>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <!-- Step Indicator -->
+                <div class="step-indicator mb-8">
+                    <div class="step active completed" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Trip Details</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Vehicle</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Passenger Info</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                </div>
+
+                <!-- STEP 1: Trip Details -->
+                <div class="booking-step" id="step1" data-step="1">
+                    <h3 class="text-xl font-bold text-navy mb-6">Trip Details</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Trip Type</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="tripType" value="oneway" checked class="mr-2">
+                                <span>One-Way Trip</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="tripType" value="roundtrip" class="mr-2">
+                                <span>Round Trip</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pickup Location *</label>
+                            <input type="text" id="pickupLocation" placeholder="e.g., Abu Dhabi" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Dropoff Location *</label>
+                            <input type="text" id="dropoffLocation" placeholder="e.g., Dubai" required>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Departure Date *</label>
+                            <input type="date" id="departureDate" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Departure Time *</label>
+                            <input type="time" id="departureTime" required>
+                        </div>
+                    </div>
+
+                    <div id="returnTripSection" class="hidden mb-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Return Date</label>
+                                <input type="date" id="returnDate">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Return Time</label>
+                                <input type="time" id="returnTime">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="nextStep(1)" class="btn-primary flex-1">Next: Select Vehicle</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Vehicle Selection -->
+                <div class="booking-step hidden" id="step2" data-step="2">
+                    <h3 class="text-xl font-bold text-navy mb-6">Select Your Vehicle</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6" id="vehicleGrid">
+                        <!-- Vehicles will be populated by JavaScript -->
+                    </div>
+
+                    <div class="price-display" id="priceDisplay">
+                        <p class="text-sm mb-2">Estimated Price</p>
+                        <div class="price-amount" id="priceAmount">AED 0</div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="prevStep(2)" class="btn-secondary flex-1">Back</button>
+                        <button onclick="nextStep(2)" class="btn-primary flex-1">Next: Passenger Info</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Passenger Information -->
+                <div class="booking-step hidden" id="step3" data-step="3">
+                    <h3 class="text-xl font-bold text-navy mb-6">Passenger Information</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                        <input type="text" id="passengerName" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" id="passengerEmail" placeholder="john@example.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                            <input type="tel" id="passengerPhone" placeholder="+971 50 XXX XXXX" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
+                        <textarea id="specialRequests" placeholder="Any special requirements? (e.g., wheelchair access, extra luggage)" rows="4" class="w-full"></textarea>
+                    </div>
+
+                    <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+                        <p class="text-sm text-gray-700">
+                            <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+                            We'll send your booking confirmation and receipt to the email provided.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="prevStep(3)" class="btn-secondary flex-1">Back</button>
+                        <button onclick="nextStep(3)" class="btn-primary flex-1">Next: Payment</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Payment -->
+                <div class="booking-step hidden" id="step4" data-step="4">
+                    <h3 class="text-xl font-bold text-navy mb-6">Payment Details</h3>
+
+                    <!-- Order Summary -->
+                    <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <h4 class="font-bold text-gray-800 mb-3">Booking Summary</h4>
+                        <div class="text-sm text-gray-600 space-y-2">
+                            <div class="flex justify-between">
+                                <span>Route:</span>
+                                <span id="summaryRoute" class="font-medium text-gray-800">Abu Dhabi → Dubai</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Vehicle:</span>
+                                <span id="summaryVehicle" class="font-medium text-gray-800">Not selected</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Date:</span>
+                                <span id="summaryDate" class="font-medium text-gray-800">-</span>
+                            </div>
+                            <div class="flex justify-between border-t pt-2 mt-2">
+                                <span class="font-bold">Total Amount:</span>
+                                <span id="summaryTotal" class="font-bold text-teal-700 text-lg">AED 0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-gray-800 mb-4">Payment Method</h4>
+
+                    <div class="space-y-4 mb-6">
+                        <!-- Credit/Debit Card -->
+                        <div class="p-4 border-2 border-teal-600 rounded-lg bg-teal-50">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="card" checked class="mr-3 w-5 h-5">
+                                <span class="font-medium flex-1">Credit/Debit Card</span>
+                                <i class="fas fa-credit-card text-gray-400"></i>
+                            </label>
+                        </div>
+
+                        <!-- Apple Pay -->
+                        <div class="p-4 border-2 border-gray-300 rounded-lg hover:border-gray-400">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="applepay" class="mr-3 w-5 h-5">
+                                <span class="font-medium flex-1">Apple Pay</span>
+                                <i class="fab fa-apple text-gray-400"></i>
+                            </label>
+                        </div>
+
+                        <!-- Google Pay -->
+                        <div class="p-4 border-2 border-gray-300 rounded-lg hover:border-gray-400">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="googlepay" class="mr-3 w-5 h-5">
+                                <span class="font-medium flex-1">Google Pay</span>
+                                <i class="fab fa-google text-gray-400"></i>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Card Details (shown for card payment) -->
+                    <div id="cardDetails" class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name *</label>
+                            <input type="text" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Card Number *</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Month *</label>
+                                <select required>
+                                    <option value="">MM</option>
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Year *</label>
+                                <select required>
+                                    <option value="">YY</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV *</label>
+                                <input type="text" placeholder="123" maxlength="3" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Info -->
+                    <div class="mb-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                        <p class="text-xs text-gray-600">
+                            <i class="fas fa-lock text-green-600 mr-2"></i>
+                            Your payment is secure and encrypted with SSL 256-bit encryption.
+                        </p>
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="mb-6">
+                        <label class="flex items-start cursor-pointer">
+                            <input type="checkbox" class="mr-3 mt-1" required>
+                            <span class="text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-teal-600 font-medium hover:underline">Terms & Conditions</a> and <a href="#" class="text-teal-600 font-medium hover:underline">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="prevStep(4)" class="btn-secondary flex-1">Back</button>
+                        <button onclick="processPayment()" class="btn-primary flex-1 text-lg font-bold">
+                            <i class="fas fa-check mr-2"></i> Complete Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         SERVICES SECTION
+         ============================================ -->
+    <section id="services" class="py-16 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">Our Premium Services</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Tailored transportation solutions for every journey and occasion
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Airport Transfers -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-3">Airport Transfers</h3>
+                    <p class="text-gray-600 mb-4">Direct routes to Abu Dhabi, Dubai, and Sharjah airports with real-time tracking.</p>
+                    <button class="text-teal-600 font-medium hover:text-teal-700 flex items-center gap-2 justify-center">
+                        Learn More <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Corporate Commutes -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-3">Corporate Commutes</h3>
+                    <p class="text-gray-600 mb-4">Reliable employee transportation and corporate group travel solutions.</p>
+                    <button class="text-teal-600 font-medium hover:text-teal-700 flex items-center gap-2 justify-center">
+                        Learn More <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Intercity Travel -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-3">Intercity Travel</h3>
+                    <p class="text-gray-600 mb-4">Comfortable long-distance routes connecting major cities across UAE.</p>
+                    <button class="text-teal-600 font-medium hover:text-teal-700 flex items-center gap-2 justify-center">
+                        Learn More <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Event & Group Charters -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-champagne-glasses"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-3">Event & Groups</h3>
+                    <p class="text-gray-600 mb-4">Customized group travel for events, tours, and special occasions.</p>
+                    <button class="text-teal-600 font-medium hover:text-teal-700 flex items-center gap-2 justify-center">
+                        Learn More <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FLEET & VEHICLE FEATURES
+         ============================================ -->
+    <section class="py-16 sm:py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">Our Fleet</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Comfortable, well-kept cars for every trip, from solo rides to family journeys
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="h-40 bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center">
+                        <i class="fas fa-shuttle-van text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-navy mb-2">Toyota Previa</h4>
+                        <p class="text-gray-600 text-sm mb-4">7 Passengers &bull; 4 Cars Available</p>
+                        <p class="text-teal-600 font-bold">From AED 250/person</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="h-40 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
+                        <i class="fas fa-car-side text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-navy mb-2">Toyota Innova</h4>
+                        <p class="text-gray-600 text-sm mb-4">7 Passengers</p>
+                        <p class="text-teal-600 font-bold">From AED 220/person</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="h-40 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
+                        <i class="fas fa-car-side text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-navy mb-2">Toyota Avanza</h4>
+                        <p class="text-gray-600 text-sm mb-4">7 Passengers</p>
+                        <p class="text-teal-600 font-bold">From AED 200/person</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="h-40 bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center">
+                        <i class="fas fa-car text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-navy mb-2">Toyota Yaris</h4>
+                        <p class="text-gray-600 text-sm mb-4">4 Passengers &bull; 2 Cars Available</p>
+                        <p class="text-teal-600 font-bold">From AED 150/person</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="h-40 bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center">
+                        <i class="fas fa-car text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-lg font-bold text-navy mb-2">Honda Accord</h4>
+                        <p class="text-gray-600 text-sm mb-4">4 Passengers</p>
+                        <p class="text-teal-600 font-bold">From AED 300/person</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-2xl font-bold text-navy mb-8 text-center">Standard Features Across All Cars</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-user-tie text-teal-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-navy mb-2">Professional Drivers</h4>
+                        <p class="text-sm text-gray-600">Experienced, courteous and punctual</p>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-snowflake text-blue-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-navy mb-2">Air Conditioning</h4>
+                        <p class="text-sm text-gray-600">Climate control for comfort</p>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-couch text-purple-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-navy mb-2">Comfortable Seating</h4>
+                        <p class="text-sm text-gray-600">Clean, comfortable seats for every passenger</p>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-satellite text-green-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-navy mb-2">GPS Tracking</h4>
+                        <p class="text-sm text-gray-600">Real-time location updates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         TIMETABLE & ROUTES SECTION
+         ============================================ -->
+    <section id="timetable" class="py-16 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">Timetable & Routes</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Browse our active schedules and find the perfect departure time for your journey
+                </p>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="mb-8 flex flex-col md:flex-row gap-4">
+                <input type="text" id="filterFrom" placeholder="Search by From Location..." class="flex-1">
+                <input type="text" id="filterTo" placeholder="Search by To Location..." class="flex-1">
+                <select id="filterStatus" class="flex-1">
+                    <option value="">All Status</option>
+                    <option value="on-time">On Schedule</option>
+                    <option value="full">Fully Booked</option>
+                    <option value="few">Few Seats Left</option>
+                </select>
+            </div>
+
+            <!-- Timetable -->
+            <div class="timetable-container shadow-lg rounded-lg overflow-hidden">
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Price/Person</th>
+                            <th>Available</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         WHY CHOOSE US & TESTIMONIALS
+         ============================================ -->
+    <section class="py-16 sm:py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Why Choose Us -->
+            <div class="mb-20">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">Why Choose Future Life?</h2>
+                    <p class="text-lg text-gray-600">Excellence in every journey</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Safety First -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy mb-3">Safety First</h3>
+                        <p class="text-gray-600">
+                            All vehicles undergo strict safety inspections and drivers are fully trained with advanced certifications.
+                        </p>
+                    </div>
+
+                    <!-- Punctual Schedules -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy mb-3">Punctual Schedules</h3>
+                        <p class="text-gray-600">
+                            Real-time tracking ensures on-time arrivals. We respect your time and commitments.
+                        </p>
+                    </div>
+
+                    <!-- Transparent Pricing -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-tag text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy mb-3">Transparent Pricing</h3>
+                        <p class="text-gray-600">
+                            No hidden fees. Clear, upfront pricing with detailed breakdowns before you book.
+                        </p>
+                    </div>
+
+                    <!-- 24/7 Support -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-headset text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy mb-3">24/7 Support</h3>
+                        <p class="text-gray-600">
+                            Our customer support team is always ready to assist with any questions or concerns.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="mb-20">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">What Our Passengers Say</h2>
+                </div>
+
+                <div class="testimonial-carousel">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-item active bg-white p-8 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-bold">
+                                AH
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-navy">Ahmed Hassan</h4>
+                                <p class="text-gray-600 text-sm">Business Executive</p>
+                            </div>
+                        </div>
+                        <div class="flex mb-4">
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                        </div>
+                        <p class="text-gray-700">
+                            "Exceptional service! Future Life has become my go-to for all airport transfers. Their drivers are professional, and the vehicles are impeccably maintained. Highly recommended!"
+                        </p>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-item bg-white p-8 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-bold">
+                                FA
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-navy">Fatima Al Mansouri</h4>
+                                <p class="text-gray-600 text-sm">Tourism Manager</p>
+                            </div>
+                        </div>
+                        <div class="flex mb-4">
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                        </div>
+                        <p class="text-gray-700">
+                            "We've booked Future Life for our corporate retreats multiple times. The group coordination is seamless, and the comfort level is outstanding. Best choice for corporate travel!"
+                        </p>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-item bg-white p-8 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-bold">
+                                MK
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-bold text-navy">Mohammed Khan</h4>
+                                <p class="text-gray-600 text-sm">Frequent Traveler</p>
+                            </div>
+                        </div>
+                        <div class="flex mb-4">
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                            <i class="fas fa-star text-gold"></i>
+                        </div>
+                        <p class="text-gray-700">
+                            "Reliable, comfortable, and affordable. I've tried several transport companies, but Future Life stands out for its consistency and quality. Worth every dirham!"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Testimonial Navigation -->
+                <div class="flex justify-center gap-4 mt-8">
+                    <button onclick="prevTestimonial()" class="w-12 h-12 rounded-full bg-white border-2 border-teal-600 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button onclick="nextTestimonial()" class="w-12 h-12 rounded-full bg-white border-2 border-teal-600 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trust Stats -->
+            <div class="grid md:grid-cols-4 gap-8 bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-gold mb-2">15K+</div>
+                    <p class="text-gray-600">Passengers Served</p>
+                </div>
+                <div class="text-center border-l border-gray-200">
+                    <div class="text-4xl font-bold text-gold mb-2">98%</div>
+                    <p class="text-gray-600">On-Time Arrival</p>
+                </div>
+                <div class="text-center border-l border-gray-200">
+                    <div class="text-4xl font-bold text-gold mb-2">4.8★</div>
+                    <p class="text-gray-600">Average Rating</p>
+                </div>
+                <div class="text-center border-l border-gray-200">
+                    <div class="text-4xl font-bold text-gold mb-2">50+</div>
+                    <p class="text-gray-600">Active Routes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         ABOUT SECTION
+         ============================================ -->
+    <section id="about" class="py-16 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-6">About Future Life</h2>
+                    <p class="text-lg text-gray-600 mb-4 leading-relaxed">
+                        Founded in 2018, Future Life Passengers Transport LLC has been serving the UAE with premium, reliable transportation solutions. We started with a vision to revolutionize passenger travel across the Emirates.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Today, we operate a fleet of well-maintained cars including Toyota Previa, Innova, Avanza, Yaris and Honda Accord. Our commitment to safety, comfort, and punctuality has made us a trusted name in the industry.
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <i class="fas fa-check text-teal-600 text-xl mt-1"></i>
+                            <span class="text-gray-700">ISO 9001 Certified for Quality Management</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <i class="fas fa-check text-teal-600 text-xl mt-1"></i>
+                            <span class="text-gray-700">Clean, Well-Maintained Cars</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <i class="fas fa-check text-teal-600 text-xl mt-1"></i>
+                            <span class="text-gray-700">Professional Drivers with Annual Training</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-teal-600 to-navy rounded-lg h-96 flex items-center justify-center">
+                    <div class="text-center text-white">
+                        <i class="fas fa-car-side text-8xl mb-4 opacity-50"></i>
+                        <p class="text-xl font-bold">Your Journey, Our Responsibility</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CONTACT SECTION
+         ============================================ -->
+    <section id="contact" class="py-16 sm:py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">Get in Touch</h2>
+                <p class="text-lg text-gray-600">We're here to help. Reach out with any questions or booking inquiries.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Contact Info Cards -->
+                <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-phone text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-2">Phone</h3>
+                    <p class="text-gray-600 mb-2"><a href="tel:+971555721619" class="hover:text-teal-700">+971 55 572 1619</a></p>
+                    <p class="text-gray-600">24/7 Customer Support</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-2">Email</h3>
+                    <p class="text-gray-600 mb-2"><a href="mailto:futurelifepassengertransport1@gmail.com" class="hover:text-teal-700 break-all">futurelifepassengertransport1@gmail.com</a></p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-map-marker-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy mb-2">Address</h3>
+                    <p class="text-gray-600 mb-2">Electra Street, Abu Dhabi City</p>
+                    <p class="text-gray-600">United Arab Emirates</p>
+                </div>
+            </div>
+
+            <!-- Operating Hours -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+                <h3 class="text-2xl font-bold text-navy mb-6 text-center">Operating Hours</h3>
+                <div class="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+                    <div>
+                        <p class="font-bold text-navy mb-3">Weekdays (Monday - Friday)</p>
+                        <p class="text-gray-600">5:00 AM - 11:00 PM</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-navy mb-3">Weekends (Saturday - Sunday)</p>
+                        <p class="text-gray-600">6:00 AM - 12:00 AM</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-navy mb-3">Public Holidays</p>
+                        <p class="text-gray-600">7:00 AM - 10:00 PM</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-navy mb-3">Emergency Support</p>
+                        <p class="text-gray-600">Available 24/7</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
+                <h3 class="text-2xl font-bold text-navy mb-6">Send us a Message</h3>
+                <form class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Your Name" class="w-full" required>
+                        <input type="email" placeholder="Your Email" class="w-full" required>
+                    </div>
+                    <input type="text" placeholder="Subject" class="w-full" required>
+                    <textarea placeholder="Your Message" rows="5" class="w-full" required></textarea>
+                    <button type="submit" class="btn-primary w-full">
+                        <i class="fas fa-paper-plane mr-2"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="gradient-primary text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand Info -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-gold flex items-center justify-center">
+                            <i class="fas fa-car-side text-navy text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Future Life</h3>
+                            <p class="text-xs">Transport LLC</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm">Premium passenger transport solutions across the UAE.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#booking" class="hover:text-gold transition-colors">Book a Ride</a></li>
+                        <li><a href="#timetable" class="hover:text-gold transition-colors">View Schedules</a></li>
+                        <li><a href="#services" class="hover:text-gold transition-colors">Our Services</a></li>
+                        <li><a href="#about" class="hover:text-gold transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Services</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:text-gold transition-colors">Airport Transfers</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Corporate Travel</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Group Charters</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Event Transport</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Follow Us</h4>
+                    <div class="flex gap-4 mb-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gold text-navy flex items-center justify-center hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gold text-navy flex items-center justify-center hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gold text-navy flex items-center justify-center hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gold text-navy flex items-center justify-center hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-300 text-sm">
+                <p>&copy; 2024 Future Life Passengers Transport LLC. All rights reserved.</p>
+                <div class="flex justify-center gap-6 mt-4">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms & Conditions</a>
+                    <a href="#" class="hover:text-gold transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ==================== DATA ====================
+        // Sample route/timetable data
+        const routesData = [
+            { from: 'Abu Dhabi', to: 'Dubai', departure: '06:00', arrival: '07:30', duration: '1h 30m', status: 'on-time', price: 75, available: 15 },
+            { from: 'Abu Dhabi', to: 'Sharjah', departure: '06:30', arrival: '08:15', duration: '1h 45m', status: 'on-time', price: 85, available: 8 },
+            { from: 'Dubai', to: 'Abu Dhabi', departure: '07:00', arrival: '08:30', duration: '1h 30m', status: 'few', price: 75, available: 2 },
+            { from: 'Abu Dhabi', to: 'Al Ain', departure: '07:30', arrival: '09:15', duration: '1h 45m', status: 'on-time', price: 95, available: 20 },
+            { from: 'Dubai', to: 'Sharjah', departure: '08:00', arrival: '08:45', duration: '45m', status: 'on-time', price: 50, available: 12 },
+            { from: 'Abu Dhabi', to: 'Dubai', departure: '09:00', arrival: '10:30', duration: '1h 30m', status: 'full', price: 75, available: 0 },
+            { from: 'Sharjah', to: 'Abu Dhabi', departure: '10:00', arrival: '11:45', duration: '1h 45m', status: 'on-time', price: 85, available: 18 },
+            { from: 'Abu Dhabi', to: 'Dubai', departure: '15:00', arrival: '16:30', duration: '1h 30m', status: 'on-time', price: 75, available: 25 },
+        ];
+
+        // Vehicle types with pricing
+        const vehicles = [
+            { id: 1, name: 'Toyota Previa', capacity: '7', price: 250, passengers: 7, luggage: 5, icon: 'fas fa-shuttle-van' },
+            { id: 2, name: 'Toyota Innova', capacity: '7', price: 220, passengers: 7, luggage: 4, icon: 'fas fa-car-side' },
+            { id: 3, name: 'Toyota Avanza', capacity: '7', price: 200, passengers: 7, luggage: 4, icon: 'fas fa-car-side' },
+            { id: 4, name: 'Toyota Yaris', capacity: '4', price: 150, passengers: 4, luggage: 3, icon: 'fas fa-car' },
+            { id: 5, name: 'Honda Accord', capacity: '4', price: 300, passengers: 4, luggage: 3, icon: 'fas fa-car' }
+        ];
+
+        let currentStep = 1;
+        let selectedVehicle = null;
+        let currentTestimonial = 0;
+
+        // ==================== HAMBURGER MENU ====================
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('mobileMenu').classList.toggle('active');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('hamburger').classList.remove('active');
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
+
+        // ==================== BOOKING MODAL ====================
+        function openBookingModal() {
+            document.getElementById('bookingModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            // Reset form to step 1
+            currentStep = 1;
+            updateSteps();
+            showStep(1);
+        }
+
+        // Close modal when clicking overlay
+        document.getElementById('bookingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        // ==================== BOOKING FORM LOGIC ====================
+        // Handle trip type change
+        document.querySelectorAll('input[name="tripType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const returnSection = document.getElementById('returnTripSection');
+                if (this.value === 'roundtrip') {
+                    returnSection.classList.remove('hidden');
+                } else {
+                    returnSection.classList.add('hidden');
+                }
+            });
+        });
+
+        // Populate vehicle selection
+        function populateVehicles() {
+            const vehicleGrid = document.getElementById('vehicleGrid');
+            vehicleGrid.innerHTML = '';
+            
+            vehicles.forEach(vehicle => {
+                const card = document.createElement('div');
+                card.className = 'vehicle-card p-6 rounded-lg';
+                card.innerHTML = `
+                    <div class="relative">
+                        <div class="text-4xl mb-4 text-center" style="color: #0d7f7f;">
+                            <i class="${vehicle.icon}"></i>
+                        </div>
+                        <div class="vehicle-badge hidden" data-id="${vehicle.id}">SELECTED</div>
+                    </div>
+                    <h4 class="font-bold text-navy mb-2">${vehicle.name}</h4>
+                    <div class="text-sm text-gray-600 space-y-1 mb-4">
+                        <p><i class="fas fa-users mr-2"></i> ${vehicle.capacity} Passengers</p>
+                        <p><i class="fas fa-luggage-cart mr-2"></i> ${vehicle.luggage} Luggage Items</p>
+                    </div>
+                    <p class="text-teal-600 font-bold">AED ${vehicle.price}/person</p>
+                `;
+                
+                card.addEventListener('click', () => selectVehicle(vehicle));
+                vehicleGrid.appendChild(card);
+            });
+        }
+
+        function selectVehicle(vehicle) {
+            selectedVehicle = vehicle;
+            
+            // Update UI
+            document.querySelectorAll('.vehicle-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('.vehicle-badge').classList.add('hidden');
+            });
+            
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.querySelector('.vehicle-badge').classList.remove('hidden');
+            
+            // Update price display
+            const passengers = 1; // Default, would be dynamic in real app
+            const totalPrice = vehicle.price * passengers;
+            document.getElementById('priceAmount').textContent = `AED ${totalPrice}`;
+        }
+
+        // ==================== FORM VALIDATION ====================
+        function validateStep(step) {
+            const inputs = document.querySelectorAll(`#step${step} input[required], #step${step} select[required]`);
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('error');
+                    isValid = false;
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+            
+            // Special validation for step 2
+            if (step === 2 && !selectedVehicle) {
+                alert('Please select a vehicle');
+                return false;
+            }
+            
+            // Email validation for step 3
+            if (step === 3) {
+                const email = document.getElementById('passengerEmail');
+                if (email.value && !email.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                    email.classList.add('error');
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
+        }
+
+        // ==================== STEP NAVIGATION ====================
+        function nextStep(currentStepNum) {
+            if (!validateStep(currentStepNum)) {
+                return;
+            }
+            
+            if (currentStepNum < 4) {
+                currentStep = currentStepNum + 1;
+                updateSteps();
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep(currentStepNum) {
+            if (currentStepNum > 1) {
+                currentStep = currentStepNum - 1;
+                updateSteps();
+                showStep(currentStep);
+            }
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.booking-step').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.getElementById(`step${step}`).classList.remove('hidden');
+            
+            // Update summary when showing payment step
+            if (step === 4) {
+                updatePaymentSummary();
+            }
+        }
+
+        function updateSteps() {
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        function updatePaymentSummary() {
+            document.getElementById('summaryRoute').textContent = 
+                `${document.getElementById('pickupLocation').value} → ${document.getElementById('dropoffLocation').value}`;
+            document.getElementById('summaryVehicle').textContent = selectedVehicle ? selectedVehicle.name : 'Not selected';
+            document.getElementById('summaryDate').textContent = document.getElementById('departureDate').value;
+            
+            const passengers = 1; // Would be dynamic
+            const totalPrice = selectedVehicle ? selectedVehicle.price * passengers : 0;
+            document.getElementById('summaryTotal').textContent = `AED ${totalPrice}`;
+        }
+
+        // ==================== PAYMENT GATEWAY ====================
+        // Handle payment method selection
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const cardDetails = document.getElementById('cardDetails');
+                if (this.value === 'card') {
+                    cardDetails.style.display = 'block';
+                } else {
+                    cardDetails.style.display = 'none';
+                }
+            });
+        });
+
+        // Format card number input
+        document.querySelectorAll('input[placeholder="1234 5678 9012 3456"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s/g, '');
+                let formattedValue = value.replace(/(\d{4})/g, '$1 ').trim();
+                e.target.value = formattedValue;
+            });
+        });
+
+        function processPayment() {
+            // Validate card details if card payment is selected
+            if (document.querySelector('input[name="paymentMethod"]:checked').value === 'card') {
+                const cardInputs = document.querySelectorAll('#cardDetails input[required], #cardDetails select[required]');
+                let isValid = true;
+                
+                cardInputs.forEach(input => {
+                    if (!input.value) {
+                        input.classList.add('error');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+                
+                if (!isValid) return;
+            }
+
+            // Show success message
+            // In a real application, you would integrate with Stripe/PayPal here
+            // Example API integration point:
+            /*
+            const paymentData = {
+                method: document.querySelector('input[name="paymentMethod"]:checked').value,
+                passenger: {
+                    name: document.getElementById('passengerName').value,
+                    email: document.getElementById('passengerEmail').value,
+                    phone: document.getElementById('passengerPhone').value
+                },
+                trip: {
+                    from: document.getElementById('pickupLocation').value,
+                    to: document.getElementById('dropoffLocation').value,
+                    date: document.getElementById('departureDate').value,
+                    time: document.getElementById('departureTime').value
+                },
+                vehicle: selectedVehicle.id,
+                amount: selectedVehicle.price
+            };
+
+            // Send to backend (example with Stripe)
+            fetch('/api/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Initialize Stripe checkout or payment
+                stripe.redirectToCheckout({sessionId: data.sessionId});
+            })
+            .catch(error => console.error('Error:', error));
+            */
+
+            // Mock success message
+            closeBookingModal();
+            showSuccessMessage();
+        }
+
+        function showSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg';
+            successDiv.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl"></i>
+                    <div>
+                        <p class="font-bold">Booking Confirmed!</p>
+                        <p class="text-sm">A confirmation email has been sent to your inbox.</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+
+        // ==================== TIMETABLE ====================
+        function populateTimetable() {
+            const tbody = document.getElementById('timetableBody');
+            tbody.innerHTML = '';
+            
+            routesData.forEach(route => {
+                const row = document.createElement('tr');
+                const statusIcon = route.status === 'full' ? '<i class="fas fa-circle text-red-500"></i>' :
+                                   route.status === 'few' ? '<i class="fas fa-circle text-yellow-500"></i>' :
+                                   '<i class="fas fa-circle text-green-500"></i>';
+                const statusText = route.status === 'full' ? 'Fully Booked' :
+                                   route.status === 'few' ? 'Few Seats' :
+                                   'On Schedule';
+                
+                row.innerHTML = `
+                    <td class="font-medium text-gray-800">${route.from} → ${route.to}</td>
+                    <td>${route.departure}</td>
+                    <td>${route.arrival}</td>
+                    <td>${route.duration}</td>
+                    <td><span class="flex items-center gap-2">${statusIcon} ${statusText}</span></td>
+                    <td class="font-bold text-teal-600">AED ${route.price}</td>
+                    <td>${route.available} seats</td>
+                    <td>
+                        <button onclick="openBookingModal()" class="btn-primary text-sm py-1 px-3">
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Timetable filtering
+        document.getElementById('filterFrom')?.addEventListener('input', filterTimetable);
+        document.getElementById('filterTo')?.addEventListener('input', filterTimetable);
+        document.getElementById('filterStatus')?.addEventListener('change', filterTimetable);
+
+        function filterTimetable() {
+            const fromFilter = document.getElementById('filterFrom')?.value.toLowerCase() || '';
+            const toFilter = document.getElementById('filterTo')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('filterStatus')?.value || '';
+            
+            document.querySelectorAll('#timetableBody tr').forEach(row => {
+                const from = row.cells[0].textContent.split('→')[0].trim().toLowerCase();
+                const to = row.cells[0].textContent.split('→')[1].trim().toLowerCase();
+                const status = row.cells[4].textContent.toLowerCase();
+                
+                const matches = (from.includes(fromFilter) || fromFilter === '') &&
+                               (to.includes(toFilter) || toFilter === '') &&
+                               (status.includes(statusFilter) || statusFilter === '');
+                
+                row.style.display = matches ? '' : 'none';
+            });
+        }
+
+        // ==================== TESTIMONIALS ====================
+        function nextTestimonial() {
+            currentTestimonial = (currentTestimonial + 1) % 3;
+            updateTestimonials();
+        }
+
+        function prevTestimonial() {
+            currentTestimonial = (currentTestimonial - 1 + 3) % 3;
+            updateTestimonials();
+        }
+
+        function updateTestimonials() {
+            document.querySelectorAll('.testimonial-item').forEach((item, index) => {
+                item.classList.remove('active');
+                if (index === currentTestimonial) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            populateVehicles();
+            populateTimetable();
+            showStep(1);
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('departureDate').setAttribute('min', today);
+            document.getElementById('returnDate').setAttribute('min', today);
+        });
+
+        // ==================== SMOOTH SCROLL ====================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
